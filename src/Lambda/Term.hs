@@ -68,21 +68,57 @@ showInnerLambda n t              = "." ++ showTerm n t
 -- Fancy function naming
 
 showFancy :: Term -> Maybe String
+showFancy TermI   = Just "I"
+--showFancy TermK   = Just "K" -- Uncomment for the "proper" name :P
+showFancy TermS   = Just "S"
+showFancy TermY   = Just "Y"
 showFancy TermT   = Just "T"
 showFancy TermF   = Just "F"
+showFancy TermNot = Just "NOT"
 showFancy TermAnd = Just "AND"
-showFancy TermId  = Just "ID"
+showFancy TermOr  = Just "OR"
 showFancy _       = Nothing
 
+-- I: \a.a
+pattern TermI :: Term
+pattern TermI = Lambda (Var 0)
 
+-- K: \a b.a
+pattern TermK :: Term
+pattern TermK = Lambda2 (Var 1)
+
+-- S: \a b c.a c (b c)
+pattern TermS :: Term
+pattern TermS = Lambda3 (Apply3 (Var 2) (Var 0) (Apply (Var 1) (Var 0)))
+
+-- Y: \f.(\x.f (x x)) (\x.f (x x))
+pattern TermY :: Term
+pattern TermY = Lambda (Apply
+                         (Lambda (Apply (Var 1) (Apply (Var 0) (Var 0))))
+                         (Lambda (Apply (Var 1) (Apply (Var 0) (Var 0))))
+                       )
+
+-- Boolean expressions
+
+-- T: \a b.a
 pattern TermT :: Term
 pattern TermT = Lambda2 (Var 1)
+
+-- F: \a b.b
 pattern TermF :: Term
 pattern TermF = Lambda2 (Var 0)
+
+-- NOT: \a.a F T
+pattern TermNot :: Term
+pattern TermNot = Lambda (Apply3 (Var 0) TermF TermT)
+
+-- AND: \a b.a b F
 pattern TermAnd :: Term
-pattern TermAnd = Lambda2 (Apply3 (Var 1) (Var 0) (Lambda2 (Var 0)))
-pattern TermId :: Term
-pattern TermId = Lambda (Var 0)
+pattern TermAnd = Lambda2 (Apply3 (Var 1) (Var 0) TermF)
+
+-- OR: \a b.a T b
+pattern TermOr :: Term
+pattern TermOr = Lambda2 (Apply3 (Var 1) TermT (Var 0))
 
 pattern Apply3 :: Term -> Term -> Term -> Term
 pattern Apply3 a b c = Apply (Apply a b) c
