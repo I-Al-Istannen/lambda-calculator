@@ -4,27 +4,28 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 92c05d76a2aaef56b1695c5f6721eab813254436b9e9c301ddecbeb7ebe9d7fd
+-- hash: d0b72ac62a38d2539575f2d02e237969aa0cfd2c899b386069e2841f84e2e2bc
 
 name:           lambda-calculator
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/lambda-calculator#readme>
-homepage:       https://github.com/githubuser/lambda-calculator#readme
-bug-reports:    https://github.com/githubuser/lambda-calculator/issues
+description:    Please see the README on GitHub at <https://github.com/I-Al-Istannen/lambda-calculator#readme>
+homepage:       https://github.com/I-Al-Istannen/lambda-calculator#readme
+bug-reports:    https://github.com/I-Al-Istannen/lambda-calculator/issues
 author:         Author name here
 maintainer:     example@example.com
-copyright:      2020 Author name here
+copyright:      2020 I-Al-Istannen
 license:        BSD3
 build-type:     Simple
 extra-source-files:
     README.md
-    ChangeLog.md
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/lambda-calculator
+  location: https://github.com/I-Al-Istannen/lambda-calculator
 
 library
+  exposed-modules:
+      Lambda.Term
   other-modules:
       Paths_lambda_calculator
   hs-source-dirs:
@@ -33,7 +34,7 @@ library
       base >=4.7 && <5
   default-language: Haskell2010
 
-executable lambda-calculator-exe
+executable lambda-calculator
   main-is: Main.hs
   other-modules:
       Paths_lambda_calculator
