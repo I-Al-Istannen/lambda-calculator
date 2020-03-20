@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1b0ab733350ec7b0343d74f3b85740e109208a8562a9ff19dae455e522b73c0e
+-- hash: 92c05d76a2aaef56b1695c5f6721eab813254436b9e9c301ddecbeb7ebe9d7fd
 
 name:           lambda-calculator
 version:        0.1.0.0
@@ -15,7 +15,6 @@ author:         Author name here
 maintainer:     example@example.com
 copyright:      2020 Author name here
 license:        BSD3
-license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md
@@ -26,8 +25,6 @@ source-repository head
   location: https://github.com/githubuser/lambda-calculator
 
 library
-  exposed-modules:
-      Lib
   other-modules:
       Paths_lambda_calculator
   hs-source-dirs:
@@ -42,19 +39,6 @@ executable lambda-calculator-exe
       Paths_lambda_calculator
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
-  build-depends:
-      base >=4.7 && <5
-    , lambda-calculator
-  default-language: Haskell2010
-
-test-suite lambda-calculator-test
-  type: exitcode-stdio-1.0
-  main-is: Spec.hs
-  other-modules:
-      Paths_lambda_calculator
-  hs-source-dirs:
-      test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
