@@ -18,6 +18,12 @@ mapVars f (Apply a b) = Apply (mapVars f a) (mapVars f b)
 mapVars f (Lambda t)  = Lambda (mapVars f t)
 mapVars f (Var n)     = Var (f n)
 
+printSteps :: Term -> IO ()
+printSteps = traverse_ (putStrLn . showTerm 0) . steps
+
+steps :: Term -> [Term]
+steps = repeatUntilNothing reduce
+
 repeatUntilNothing :: (a -> Maybe a) -> a -> [a]
 repeatUntilNothing f a = a : maybe [] (repeatUntilNothing f) (f a)
 
