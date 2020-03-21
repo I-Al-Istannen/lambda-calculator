@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d0b72ac62a38d2539575f2d02e237969aa0cfd2c899b386069e2841f84e2e2bc
+-- hash: fa187aa670dc231537959a2fa2f132f0d3576b2e61cf081652c68388e407f997
 
 name:           lambda-calculator
 version:        0.1.0.0
@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      Lambda.Parsing
       Lambda.Term
   other-modules:
       Paths_lambda_calculator
