@@ -1,9 +1,8 @@
-{-# LANGUAGE BangPatterns #-}
 module Lambda.MegaParsing where
 
+import           Control.Monad
 import           Data.Char
 import           Data.Void
--- import           Debug.Trace
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
 
@@ -17,30 +16,17 @@ lambdaVariable = takeWhile1P Nothing isLower
 
 lambdaLambda :: Parser (NamedTerm String)
 lambdaLambda = do
-  _ <- single '\\'
-  initialVar <- lambdaVariable
-  followingVars <- reverse <$> many (space *> lambdaVariable)
-  let reorderedVars = followingVars ++ [initialVar]
-  _ <- single '.'
-  end <- lambdaTerm
-  let finalLambda = foldr NLambda (NLambda (head reorderedVars) end) (tail reorderedVars)
-  pure finalLambda
+  void $ single '\\'
+  variables <- reverse <$> sepBy1 lambdaVariable space
+  void $ single '.'
+  expression <- lambdaTerm
+  pure $ foldr NLambda (NLambda (head variables) expression) (tail variables)
 
 lambdaApply :: Parser (NamedTerm String)
-lambdaApply  = do
-  others <- (:) <$> applicationBeginning <*> some applicationPart
-  let finalApply = foldl1 NApply others
-  return finalApply
+lambdaApply = foldl1 NApply <$> sepBy1 partialExpression space
   where
-    inParens = do
-        _ <- single '('
-        lhs <- lambdaTerm
-        _ <- single ')'
-        return lhs
-    applicationBeginning = inParens <|> NVar <$> lambdaVariable
-    applicationPart = do
-      space
-      inParens <|> NVar <$> lambdaVariable
+    inParens = between (single '(') (single ')') lambdaTerm
+    partialExpression = inParens <|> NVar <$> lambdaVariable
 
 lambdaTerm :: Parser (NamedTerm String)
 lambdaTerm = try lambdaApply <|> lambdaLambda <|> NVar <$> lambdaVariable
