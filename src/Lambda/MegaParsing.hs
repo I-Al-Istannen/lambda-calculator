@@ -17,10 +17,10 @@ lambdaVariable = takeWhile1P Nothing isLower
 lambdaLambda :: Parser (NamedTerm String)
 lambdaLambda = do
   void $ single '\\'
-  variables <- reverse <$> sepBy1 lambdaVariable space
+  variables <- sepBy1 lambdaVariable space
   void $ single '.'
   expression <- lambdaTerm
-  pure $ foldr NLambda (NLambda (head variables) expression) (tail variables)
+  pure $ foldr NLambda (NLambda (last variables) expression) (init variables)
 
 lambdaApply :: Parser (NamedTerm String)
 lambdaApply = foldl1 NApply <$> sepBy1 partialExpression space
@@ -37,3 +37,10 @@ displayParse parser input = do
   case res of
     Left err -> putStrLn $ errorBundlePretty err
     Right r  -> print r
+
+parseOrError :: String -> NamedTerm String
+parseOrError input = do
+  let res = parse lambdaTerm "" input
+  case res of
+    Left err -> error $ errorBundlePretty err
+    Right r  -> r
