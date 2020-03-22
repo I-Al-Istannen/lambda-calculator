@@ -1,10 +1,10 @@
-name:                lambda-calculator
-version:             0.1.0.0
-github:              "I-Al-Istannen/lambda-calculator"
-license:             BSD3
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2020 I-Al-Istannen"
+name: lambda-calculator
+version: 0.1.0.0
+github: "I-Al-Istannen/lambda-calculator"
+license: BSD3
+author: "Author name here"
+maintainer: "example@example.com"
+copyright: "2020 I-Al-Istannen"
 
 extra-source-files:
   - README.md
@@ -13,6 +13,7 @@ description: Please see the README on GitHub at <https://github.com/I-Al-Istanne
 
 dependencies:
   - base >= 4.7 && < 5
+  - megaparsec
 
 library:
   source-dirs: src
