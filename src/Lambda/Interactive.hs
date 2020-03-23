@@ -1,6 +1,7 @@
 module Lambda.Interactive where
 
 import           Data.Char
+import           Data.Foldable
 import           Lambda.MegaParsing
 import           Lambda.ParseTreeConversion
 import           Lambda.Term
@@ -20,7 +21,9 @@ handleChar readText c
     putStr "\b \b"
     readNext (init readText)
   | c == '\EOT' = return ""
-  | c == '\n' = return readText
+  | c == '\n' = do
+    putChar '\n'
+    return readText
   | otherwise = do
     putChar c
     readNext $ readText ++ [c]
@@ -34,9 +37,12 @@ readLine = do
   char <- getCh
   handleChar "" char
 
+printSteps' :: Term -> IO ()
+printSteps' = traverse_ (\t -> putStrLn ("> " ++ showTerm 0 t)) . steps
+
 runInterpreter :: IO ()
 runInterpreter = do
-  putStr "Input: "
+  putStr "$ "
   input <- readLine
   if null input then
     putStrLn "\nGoodbye!"
@@ -44,6 +50,6 @@ runInterpreter = do
     case parseInput input of
       Left err -> putStrLn $ errorBundlePretty err
       Right tree -> case fromParseTree tree [] of
-        Nothing   -> putStrLn "Could not transform the parse tree :/"
-        Just term -> printSteps term
+        Left msg   -> putStrLn $ "Could not transform the parse tree. " ++ msg
+        Right term -> printSteps' term
     runInterpreter

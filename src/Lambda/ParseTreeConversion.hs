@@ -16,12 +16,12 @@ addLambda name depthMap = (name, 0) : map (mapSecond (+1)) others
 removeLambda :: String ->DepthMap -> DepthMap
 removeLambda name = filter (\(n, _) -> n /= name)
 
-findDepth :: String -> DepthMap -> Maybe Int
+findDepth :: String -> DepthMap -> Either String Int
 findDepth name depthMap = case filter (\(n, _) -> n == name) depthMap of
-  [(_, d)] -> Just d
-  _        -> error $ "Not found: " ++ name ++ show depthMap
+  [(_, d)] -> Right d
+  _        -> Left $ "Variable '" ++ name ++ "' not found!"
 
-fromParseTree :: NamedTerm String -> DepthMap -> Maybe Term
+fromParseTree :: NamedTerm String -> DepthMap -> Either String Term
 fromParseTree (NVar a) depthMap              = Var <$> findDepth a depthMap
 fromParseTree (NApply l r) depthMap          = Apply <$> fromParseTree l depthMap <*> fromParseTree r depthMap
 fromParseTree (NLambda varName val) depthMap = let
@@ -36,6 +36,6 @@ showAndPrintParsed term = do
   print term
   putStr "Parsed was     : "
   case fromParseTree (parseOrError (showTerm 0 term)) [] of
-    Nothing -> putStrLn "Couldn't parse :/"
-    Just r  -> print r
+    Left msg -> putStrLn $ "Couldn't parse: " ++ msg
+    Right r  -> print r
   putStrLn $ "Parse tree     : " ++ show (parseOrError (showTerm 0 term))
