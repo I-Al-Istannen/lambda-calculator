@@ -38,7 +38,7 @@ lambdaLambda :: Parser (NamedTerm String)
 lambdaLambda = do
   void $ single '\\'
   variables <- sepBy1 lambdaVariable space
-  void $ single '.'
+  void $ single '.' <* optional space
   expression <- lambdaTerm
   pure $ foldr NLambda (NLambda (last variables) expression) (init variables)
 
