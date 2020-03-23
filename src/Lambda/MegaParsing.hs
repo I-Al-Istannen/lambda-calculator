@@ -40,7 +40,10 @@ displayParse parser input = do
 
 parseOrError :: String -> NamedTerm String
 parseOrError input = do
-  let res = parse lambdaTerm "" input
+  let res = parseInput input
   case res of
     Left err -> error $ errorBundlePretty err
     Right r  -> r
+
+parseInput :: String -> Either (ParseErrorBundle String Void) (NamedTerm String)
+parseInput = parse lambdaTerm ""
