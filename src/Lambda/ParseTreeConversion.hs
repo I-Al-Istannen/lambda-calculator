@@ -24,6 +24,7 @@ findDepth name depthMap = case filter (\(n, _) -> n == name) depthMap of
 fromParseTree :: NamedTerm String -> DepthMap -> Either String Term
 fromParseTree (NVar a) depthMap              = Var <$> findDepth a depthMap
 fromParseTree (NApply l r) depthMap          = Apply <$> fromParseTree l depthMap <*> fromParseTree r depthMap
+fromParseTree (KnownTerm t) _                = pure t
 fromParseTree (NLambda varName val) depthMap = let
   newMap = addLambda varName depthMap
   in Lambda <$> fromParseTree val newMap
